@@ -58,3 +58,5 @@ A full-stack password manager built with React (Vite) for the frontend and Node.
 ## License
 This project is for educational purposes.
 Feel free to use and modify the code as needed.
+
+Feel free to use and modify the code as needed.
