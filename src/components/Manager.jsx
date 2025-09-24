@@ -11,7 +11,7 @@ const Manager = () => {
     const [passwordArray, setPasswordArray] = useState([])
 
     const getPassword = async () => {
-        let req = await fetch("http://localhost:3000/")
+        let req = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`)
         let passwords = await req.json()
         setPasswordArray(passwords)
     }
@@ -51,10 +51,10 @@ const Manager = () => {
         if (form.site.length > 3 && form.username.length > 3 && form.password.length > 3) {
 
             // if any such id exits in the database delete it
-            await fetch("http://localhost:3000/", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: form.id}) })
+            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: form.id}) })
 
             setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
-            await fetch("http://localhost:3000/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, id: uuidv4() }) })
+            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, id: uuidv4() }) })
             // localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
             // console.log([...passwordArray, form])
             setform({ site: "", username: "", password: "" })
@@ -80,7 +80,7 @@ const Manager = () => {
         if (c) {
             setPasswordArray(passwordArray.filter(item => item.id !== id))
             // localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)))
-            let res = await fetch("http://localhost:3000/", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id}) })
+            let res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id}) })
             toast('Password Deleted!', {
                 position: "top-right",
                 autoClose: 5000,
@@ -150,7 +150,7 @@ const Manager = () => {
                     <h2 className='font-bold text-2xl py-4'>Your Passwords</h2>
                     {passwordArray.length === 0 && <div>No Passwords to show</div>}
                     {passwordArray.length !== 0 && <table className="table-auto w-full rounded-md overflow-hidden mb-10">
-                        <thead className='bg-green-800 text-white'>
+                        <thead className='bg-green-500 text-white'>
                             <tr>
                                 <th className='py-2'>Site</th>
                                 <th className='py-2'>Username</th>
