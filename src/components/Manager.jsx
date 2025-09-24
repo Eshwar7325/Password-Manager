@@ -11,7 +11,7 @@ const Manager = () => {
     const [passwordArray, setPasswordArray] = useState([])
 
     const getPassword = async () => {
-        let req = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`)
+        let req = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/passwords`)
         let passwords = await req.json()
         setPasswordArray(passwords)
     }
@@ -51,10 +51,10 @@ const Manager = () => {
         if (form.site.length > 3 && form.username.length > 3 && form.password.length > 3) {
 
             // if any such id exits in the database delete it
-            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: form.id}) })
+            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/passwords`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: form.id}) })
 
             setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
-            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, id: uuidv4() }) })
+            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/passwords`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, id: uuidv4() }) })
             // localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
             // console.log([...passwordArray, form])
             setform({ site: "", username: "", password: "" })
@@ -80,7 +80,7 @@ const Manager = () => {
         if (c) {
             setPasswordArray(passwordArray.filter(item => item.id !== id))
             // localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)))
-            let res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id}) })
+            let res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/passwords`, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id}) })
             toast('Password Deleted!', {
                 position: "top-right",
                 autoClose: 5000,

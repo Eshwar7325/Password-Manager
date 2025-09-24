@@ -14,7 +14,6 @@ client.connect();
 // App & Database
 const dbName = process.env.DB_NAME 
 const app = express()
-const port = 3000 
 
 // Middleware
 app.use(bodyparser.json())
@@ -23,34 +22,56 @@ app.use(cors({
     credentials: true,
 }))
 
+// Root route to check if API is working
+app.get('/', async (req, res) => {
+    res.json({ message: 'PassOP Backend API is running!', status: 'success' });
+})
 
 // Get all the passwords
-app.get('/', async (req, res) => {
-    const db = client.db(dbName);
-    const collection = db.collection('passwords');
-    const findResult = await collection.find({}).toArray();
-    res.json(findResult)
+app.get('/passwords', async (req, res) => {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection('passwords');
+        const findResult = await collection.find({}).toArray();
+        res.json(findResult)
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch passwords' });
+    }
 })
 
 // Save a password
-app.post('/', async (req, res) => { 
-    const password = req.body
-    const db = client.db(dbName);
-    const collection = db.collection('passwords');
-    const findResult = await collection.insertOne(password);
-    res.send({success: true, result: findResult})
+app.post('/passwords', async (req, res) => { 
+    try {
+        const password = req.body
+        const db = client.db(dbName);
+        const collection = db.collection('passwords');
+        const findResult = await collection.insertOne(password);
+        res.send({success: true, result: findResult})
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to save password' });
+    }
 })
 
 // Delete a password by id
-app.delete('/', async (req, res) => { 
-    const password = req.body
-    const db = client.db(dbName);
-    const collection = db.collection('passwords');
-    const findResult = await collection.deleteOne(password);
-    res.send({success: true, result: findResult})
+app.delete('/passwords', async (req, res) => { 
+    try {
+        const password = req.body
+        const db = client.db(dbName);
+        const collection = db.collection('passwords');
+        const findResult = await collection.deleteOne(password);
+        res.send({success: true, result: findResult})
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete password' });
+    }
 })
 
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    const port = process.env.PORT || 3000
+    app.listen(port, () => {
+        console.log(`Example app listening on http://localhost:${port}`)
+    })
+}
 
-app.listen(port, () => {
-    console.log(`Example app listening on  http://localhost:${port}`)
-})
+// Export for Vercel
+module.exports = app
