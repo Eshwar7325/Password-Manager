@@ -18,7 +18,9 @@ const port = 3000
 
 // Middleware
 app.use(bodyparser.json())
-app.use(cors())
+app.use(cors({
+    origin: process.env.FRONTEND_URL
+}))
 
 
 // Get all the passwords
